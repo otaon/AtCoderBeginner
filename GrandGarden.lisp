@@ -1,6 +1,6 @@
 ;;; C - Grand Garden
 
-;;; -*- 問題文 -*-
+;;; -*- 問題文 -*-{{{
 ;;; 問題文
 ;;; 花壇にN本の花が咲いており、それぞれ 1, 2, ......, N と番号が振られています。
 ;;; 最初、全ての花の高さは 0 です。
@@ -24,74 +24,88 @@
 
 ;;; 出力
 ;;; 条件を満たすような最小の「水やり」操作の回数を出力してください。
+;;;}}}
 
-;;; ---------------------------------------------
-;;; 本体
 
+;;; -*- 本体 -*-{{{
 (defun solve (stream)
   "問題を解く
    stream 入力"
-  (let ((flower-heights (make-array (read stream))))
-    (labels ((read-heights (size &optional (pos 0))
-               (if (< pos size)
-                   (progn (setf (elt flower-heights pos) (read stream))
-                          (read-heights size (1+ pos))))))
-      (read-heights (length flower-heights)))
-    (labels ((count-watering ()
-               ))
-      )))
+  (let ((flower-num (read stream))
+        (waterings 0))
+    (labels ((count-watering (current height &optional (last-height 0))
+               (if (< height last-height)
+                   (setf waterings (+ waterings (- last-height height))))
+               (if (< current flower-num)
+                   (count-watering (1+ current) (read stream) height)
+                   (+ waterings height))))
+      (count-watering 1 (read stream)))))
+;}}}
 
 
-;;; ---------------------------------------------
-;;; テスト
+;;; -*- テスト -*-{{{
 
-;;; テストデータのパス
-(defparameter *test-data-dir* (sb-ext:native-pathname (format nil "~A~A" (sb-posix:getcwd) "/testdata/004_AtCoder_abc116_c_GrandGarden/input/")))
-(defparameter *test-data-list* '("sample01.txt"
-                                 "sample02.txt"
-                                 "sample03.txt"
-                                 "test10.txt"
-                                 "test11.txt"
-                                 "test12.txt"
-                                 "test13.txt"
-                                 "test14.txt"
-                                 "random01.txt"
-                                 "random02.txt"
-                                 "random03.txt"
-                                 "random04.txt"))
+;;; テストデータ
+(defparameter *test-data-dir*
+  (sb-ext:native-pathname
+    (format nil "~A~A"
+            (sb-posix:getcwd)
+            "/testdata/004_AtCoder_abc116_c_GrandGarden/input/")))
+(defparameter *test-data-list*
+  '("sample01.txt"
+    "sample02.txt"
+    "sample03.txt"
+    "test10.txt"
+    "test11.txt"
+    "test12.txt"
+    "test13.txt"
+    "test14.txt"
+    "random01.txt"
+    "random02.txt"
+    "random03.txt"
+    "random04.txt"))
 
-;;; 期待値データのパス
-(defparameter *expected-data-dir* (sb-ext:native-pathname (format nil "~A~A" (sb-posix:getcwd) "/testdata/004_AtCoder_abc116_c_GrandGarden/output/")))
-(defparameter *expected-data-list* '("out_sample01.txt"
-                                     "out_sample02.txt"
-                                     "out_sample03.txt"
-                                     "out_test10.txt"
-                                     "out_test11.txt"
-                                     "out_test12.txt"
-                                     "out_test13.txt"
-                                     "out_test14.txt"
-                                     "out_random01.txt"
-                                     "out_random02.txt"
-                                     "out_random03.txt"
-                                     "out_random04.txt"))
+;;; 期待値データ
+(defparameter *expected-data-dir*
+  (sb-ext:native-pathname
+    (format nil "~A~A"
+            (sb-posix:getcwd)
+            "/testdata/004_AtCoder_abc116_c_GrandGarden/output/")))
+(defparameter *expected-data-list*
+  '("out_sample01.txt"
+    "out_sample02.txt"
+    "out_sample03.txt"
+    "out_test10.txt"
+    "out_test11.txt"
+    "out_test12.txt"
+    "out_test13.txt"
+    "out_test14.txt"
+    "out_random01.txt"
+    "out_random02.txt"
+    "out_random03.txt"
+    "out_random04.txt"))
 
 
 (defun test-solve (test-data-path expected-data-path)
   "テスト
    test-data-path テストデータのパス
    expected-data-path 期待値データのパス"
-  (with-open-file (*in-test* test-data-path)
-    (with-open-file (*in-expected* expected-data-path)
-      (let ((expected (read *in-expected*))
-            (actual (read *in-test*)))
-        (if (eql expected actual)
+  (with-open-file (in-test test-data-path)
+    (with-open-file (in-expected expected-data-path)
+      (let ((actual (solve in-test))
+            (expected (read in-expected)))
+        (princ "  actual   ") (princ actual) (princ #\newline)
+        (princ "  expected ") (princ expected) (princ #\newline)
+        (if (eql actual expected)
             t
             nil)))))
 
 
-;;; 全テストデータに対してテスト
+;;; 全テストデータに対してテスト実施
 (if (member nil
             (mapcar (lambda (test-data expected-data)
+                      (princ "test data:     ") (princ test-data) (princ #\newline)
+                      (princ "expected data: ") (princ expected-data) (princ #\newline)
                       (test-solve
                         (merge-pathnames *test-data-dir* test-data)
                         (merge-pathnames *expected-data-dir* expected-data)))
@@ -99,4 +113,4 @@
                     *expected-data-list*))
     (princ "NG")
     (princ "OK"))
-
+;}}}
