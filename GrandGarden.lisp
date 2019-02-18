@@ -1,39 +1,39 @@
 ;;;; C - Grand Garden
 
-; -*- 問題文 -*-{{{
+; -*- ��蕶 -*-{{{
 
-; 問題文
-; 花壇にN本の花が咲いており、それぞれ 1, 2, ......, N と番号が振られています。
-; 最初、全ての花の高さは 0 です。
-; 数列 h={h1, h2, h3, ......} が入力として与えられます。
-; 以下の「水やり」操作を繰り返すことで、すべての k(1≦k≦N) に対して花kの高さをh_kにしたいです。
-;   - 整数 l,rを指定する。l≦x≦r を満たすすべてのxに対して、花 x の高さを1高くする。
-; 条件を満たすための最小の「水やり」操作の回数を求めてください。
+; ��蕶
+; �Ԓd��N�{�̉Ԃ��炢�Ă���A���ꂼ�� 1, 2, ......, N �Ɣԍ����U���Ă��܂��B
+; �ŏ��A�S�ẲԂ̍����� 0 �ł��B
+; ���� h={h1, h2, h3, ......} �����͂Ƃ��ė^�����܂��B
+; �ȉ��́u�����v������J��Ԃ����ƂŁA���ׂĂ� k(1��k��N) �ɑ΂��ĉ�k�̍�����h_k�ɂ������ł��B
+;   - ���� l,r���w�肷��Bl��x��r �𖞂������ׂĂ�x�ɑ΂��āA�� x �̍�����1��������B
+; �����𖞂������߂̍ŏ��́u�����v����̉񐔂����߂Ă��������B
 
-; 制約
-; - 1≦N≦100
-; - 0≦hi≦100
-; - 入力はすべて整数である。
+; ����
+; - 1��N��100
+; - 0��hi��100
+; - ���͂͂��ׂĐ����ł���B
 
-; 入力
-; 入力は以下の形式で標準入力から与えられます。
+; ����
+; ���͈͂ȉ��̌`���ŕW�����͂���^�����܂��B
 ;
 ; ```
 ; N
 ; h_1 h_2 h_3 ...... h_N
 ; ```
 
-; 出力
-; 条件を満たすような最小の「水やり」操作の回数を出力してください。
+; �o��
+; �����𖞂����悤�ȍŏ��́u�����v����̉񐔂��o�͂��Ă��������B
 
 ;}}}
 
 
-;;; -*- 本体 -*-{{{
+;;; -*- �{�� -*-{{{
 
 (defun solve (stream)
-  "問題を解く
-   stream 入力"
+  "��������
+   stream ����"
   (let ((flower-num (read stream)))
     (labels ((count-watering (waterings current height &optional (last-height 0))
                (if (< height last-height)
@@ -46,9 +46,9 @@
 ;}}}
 
 
-;;; -*- テスト -*-{{{
+;;; -*- �e�X�g -*-{{{
 
-;;; テストデータ
+;;; �e�X�g�f�[�^
 (defparameter *test-data-dir*
   (sb-ext:native-pathname
     (format nil "~A~A"
@@ -68,7 +68,7 @@
     "random03.txt"
     "random04.txt"))
 
-;;; 期待値データ
+;;; ���Ғl�f�[�^
 (defparameter *expected-data-dir*
   (sb-ext:native-pathname
     (format nil "~A~A"
@@ -90,9 +90,9 @@
 
 
 (defun test-solve (test-data-path expected-data-path)
-  "テスト
-   test-data-path テストデータのパス
-  expected-data-path 期待値データのパス"
+  "�e�X�g
+   test-data-path �e�X�g�f�[�^�̃p�X
+  expected-data-path ���Ғl�f�[�^�̃p�X"
   (with-open-file (in-test test-data-path)
     (with-open-file (in-expected expected-data-path)
       (let ((actual (solve in-test))
@@ -104,7 +104,7 @@
             nil)))))
 
 
-;;; 全テストデータに対してテスト実施
+;;; �S�e�X�g�f�[�^�ɑ΂��ăe�X�g���{
 (if (every (lambda (data)
              (let ((test-data (first data))
                    (expected-data (second data)))
