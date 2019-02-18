@@ -1,55 +1,55 @@
 ;;; D - Restore the Tree
 
-;;; -*- å•é¡Œæ–‡ -*-
-;;; N é ‚ç‚¹ã®æ ¹ä»˜ãæœ¨ãŒã‚ã‚Šã€ãã®é ‚ç‚¹ã«ã¯ 1 ã‹ã‚‰ N ã¾ã§ã®ç•ªå·ãŒæŒ¯ã‚‰ã‚Œã¦ã„ã¾ã™ã€‚
-;;; æ ¹ä»¥å¤–ã®å„é ‚ç‚¹ã«ã¯ã€ãã®è¦ªã‹ã‚‰ä¸€æœ¬ã®æœ‰å‘è¾ºãŒä¼¸ã³ã¦ã„ã¾ã™ã€‚
-;;; ãªãŠã€æ ¹ã¯é ‚ç‚¹ 1 ã¨ã¯é™ã‚Šã¾ã›ã‚“ã€‚
+;;; -*- –â‘è•¶ -*-
+;;; N ’¸“_‚Ìª•t‚«–Ø‚ª‚ ‚èA‚»‚Ì’¸“_‚É‚Í 1 ‚©‚ç N ‚Ü‚Å‚Ì”Ô†‚ªU‚ç‚ê‚Ä‚¢‚Ü‚·B
+;;; ªˆÈŠO‚ÌŠe’¸“_‚É‚ÍA‚»‚Ìe‚©‚çˆê–{‚Ì—LŒü•Ó‚ªL‚Ñ‚Ä‚¢‚Ü‚·B
+;;; ‚È‚¨Aª‚Í’¸“_ 1 ‚Æ‚ÍŒÀ‚è‚Ü‚¹‚ñB
 
-;;; é«˜æ©‹ãã‚“ã¯ã€ã“ã®ã‚°ãƒ©ãƒ•ã« M æœ¬ã®æ–°ãŸãªæœ‰å‘è¾ºã‚’æ›¸ãåŠ ãˆã¾ã—ãŸã€‚
-;;; æ›¸ãè¶³ã•ã‚ŒãŸå„è¾º u -> v ã¯ã€ã‚ã‚‹é ‚ç‚¹ u ã‹ã‚‰ãã®å­å­«ã§ã‚ã‚‹ã‚ˆã†ãªé ‚ç‚¹ v ã«å‘ã‹ã£ã¦ä¼¸ã³ã¦ã„ã¾ã™ã€‚
+;;; ‚‹´‚­‚ñ‚ÍA‚±‚ÌƒOƒ‰ƒt‚É M –{‚ÌV‚½‚È—LŒü•Ó‚ğ‘‚«‰Á‚¦‚Ü‚µ‚½B
+;;; ‘‚«‘«‚³‚ê‚½Še•Ó u -> v ‚ÍA‚ ‚é’¸“_ u ‚©‚ç‚»‚Ìq‘·‚Å‚ ‚é‚æ‚¤‚È’¸“_ v ‚ÉŒü‚©‚Á‚ÄL‚Ñ‚Ä‚¢‚Ü‚·B
 
-;;; é«˜æ©‹ãã‚“ãŒè¾ºã‚’æ›¸ãåŠ ãˆãŸã‚ã¨ã® N é ‚ç‚¹ã€ N ~ 1+M è¾ºã®æœ‰å‘ã‚°ãƒ©ãƒ•ãŒä¸ãˆã‚‰ã‚Œã¾ã™ã€‚
-;;; ã‚ˆã‚Šå…·ä½“çš„ã«ã¯ã€N ~ 1+M çµ„ã®æ•´æ•°ã®ãƒšã‚¢ (A1, B1), ..., (A_{N ~ 1+M}, B_{N ~ 1+M}) ãŒä¸ãˆã‚‰ã‚Œã€ã“ã‚Œã‚‰ã¯ i ç•ªç›®ã®è¾ºãŒé ‚ç‚¹ Ai ã‹ã‚‰é ‚ç‚¹ Biã«å‘ã‹ã£ã¦ä¼¸ã³ã¦ã„ã‚‹ã“ã¨ã‚’è¡¨ã—ã¾ã™ã€‚
+;;; ‚‹´‚­‚ñ‚ª•Ó‚ğ‘‚«‰Á‚¦‚½‚ ‚Æ‚Ì N ’¸“_A N ~ 1+M •Ó‚Ì—LŒüƒOƒ‰ƒt‚ª—^‚¦‚ç‚ê‚Ü‚·B
+;;; ‚æ‚è‹ï‘Ì“I‚É‚ÍAN ~ 1+M ‘g‚Ì®”‚ÌƒyƒA (A1, B1), ..., (A_{N ~ 1+M}, B_{N ~ 1+M}) ‚ª—^‚¦‚ç‚êA‚±‚ê‚ç‚Í i ”Ô–Ú‚Ì•Ó‚ª’¸“_ Ai ‚©‚ç’¸“_ Bi‚ÉŒü‚©‚Á‚ÄL‚Ñ‚Ä‚¢‚é‚±‚Æ‚ğ•\‚µ‚Ü‚·B
 
-;;; å…ƒã®æ ¹ä»˜ãæœ¨ã‚’å¾©å…ƒã—ã¦ãã ã•ã„ã€‚
+;;; Œ³‚Ìª•t‚«–Ø‚ğ•œŒ³‚µ‚Ä‚­‚¾‚³‚¢B
 
-;;; -*- åˆ¶ç´„ -*-
+;;; -*- §–ñ -*-
 ;;; 3 <= N
 ;;; 1 <= M
 ;;; N + M <= 10^5
 ;;; 1 <= A_i, B_i <= N
 ;;; A_i != B_i
-;;; i != j ãªã‚‰ã° (A_i, B_i) != (A_j, B_j)
-;;; å…¥åŠ›ã•ã‚Œã‚‹ã‚°ãƒ©ãƒ•ã¯ã€N é ‚ç‚¹ã®æ ¹ä»˜ãæœ¨ã«å•é¡Œæ–‡ä¸­ã®æ¡ä»¶ã‚’æº€ãŸã™ M æœ¬ã®è¾ºã‚’æ›¸ãè¶³ã™ã“ã¨ã§å¾—ã‚‰ã‚Œã‚‹ã€‚
+;;; i != j ‚È‚ç‚Î (A_i, B_i) != (A_j, B_j)
+;;; “ü—Í‚³‚ê‚éƒOƒ‰ƒt‚ÍAN ’¸“_‚Ìª•t‚«–Ø‚É–â‘è•¶’†‚ÌğŒ‚ğ–‚½‚· M –{‚Ì•Ó‚ğ‘‚«‘«‚·‚±‚Æ‚Å“¾‚ç‚ê‚éB
 
-;;; -*- å…¥åŠ› -*-
-;;; å…¥åŠ›ã¯ä»¥ä¸‹ã®å½¢å¼ã§æ¨™æº–å…¥åŠ›ã‹ã‚‰ä¸ãˆã‚‰ã‚Œã‚‹ã€‚
+;;; -*- “ü—Í -*-
+;;; “ü—Í‚ÍˆÈ‰º‚ÌŒ`®‚Å•W€“ü—Í‚©‚ç—^‚¦‚ç‚ê‚éB
 ;;; N          M
 ;;; A1         B1
 ;;; :
 ;;; A_{N-1+M}    B_{N-1+M}
 
-;;; -*- å‡ºåŠ› -*-
-;;; Nè¡Œå‡ºåŠ›ã›ã‚ˆã€‚
-;;; i è¡Œç›®ã«ã¯ã€é ‚ç‚¹ i ãŒå…ƒã®æœ¨ã®æ ¹ã§ã‚ã‚Œã° 0 ã‚’å‡ºåŠ›ã—ã€ãã†ã§ãªã‘ã‚Œã°å…ƒã®æœ¨ã§é ‚ç‚¹ iã®è¦ªã‚’è¡¨ã™æ•´æ•°ã‚’å‡ºåŠ›ã™ã‚‹ã“ã¨ã€‚
-;;; ãªãŠã€å…ƒã®æœ¨ã¯ä¸€æ„ã«å®šã¾ã‚‹ã“ã¨ãŒç¤ºã›ã‚‹ã€‚
+;;; -*- o—Í -*-
+;;; Nso—Í‚¹‚æB
+;;; i s–Ú‚É‚ÍA’¸“_ i ‚ªŒ³‚Ì–Ø‚Ìª‚Å‚ ‚ê‚Î 0 ‚ğo—Í‚µA‚»‚¤‚Å‚È‚¯‚ê‚ÎŒ³‚Ì–Ø‚Å’¸“_ i‚Ìe‚ğ•\‚·®”‚ğo—Í‚·‚é‚±‚ÆB
+;;; ‚È‚¨AŒ³‚Ì–Ø‚ÍˆêˆÓ‚É’è‚Ü‚é‚±‚Æ‚ª¦‚¹‚éB
 
 
-;;; -*- æœ¬ä½“ -*-{{{
+;;; -*- –{‘Ì -*-{{{
 (defun solve (stream)
-  "å•é¡Œã‚’è§£ã
-   stream å…¥åŠ›"
-  (let* ((node-number (read stream))  ; ãƒãƒ¼ãƒ‰æ•°
-         (fake-link-number (read stream))  ; è¿½åŠ ã•ã‚ŒãŸãƒªãƒ³ã‚¯æ•°
-         (children-nodes-array (make-array node-number :initial-element nil))  ; [ãƒãƒ¼ãƒ‰id] => '(å­ãƒãƒ¼ãƒ‰id1 å­ãƒãƒ¼ãƒ‰id2 ...)
-         (parent-node-array (make-array node-number :initial-element '(0 . 0))))  ; [ãƒãƒ¼ãƒ‰id] => (è¦ªãƒãƒ¼ãƒ‰id . æ·±ã•)
+  "–â‘è‚ğ‰ğ‚­
+   stream “ü—Í"
+  (let* ((node-number (read stream))  ; ƒm[ƒh”
+         (fake-link-number (read stream))  ; ’Ç‰Á‚³‚ê‚½ƒŠƒ“ƒN”
+         (children-nodes-array (make-array node-number :initial-element nil))  ; [ƒm[ƒhid] => '(qƒm[ƒhid1 qƒm[ƒhid2 ...)
+         (parent-node-array (make-array node-number :initial-element '(0 . 0))))  ; [ƒm[ƒhid] => (eƒm[ƒhid . [‚³)
     (labels ((read-inputs (&optional (current-line 1))
                (if (<= current-line (+ (1- node-number) fake-link-number))
                    (let ((parent (read stream))
                          (child  (read stream)))
-                     ;; è¦ª-å­ä¾›é”Arrayã‚’åˆæœŸåŒ–
+                     ;; e-q‹Ÿ’BArray‚ğ‰Šú‰»
                      (setf (elt children-nodes-array (1- parent)) (cons child (elt children-nodes-array (1- parent))))
-                     ;; èª°ã‹ã®å­ä¾›ã§ã‚ã‚‹ã“ã¨ãŒç¢ºå®šã—ãŸãƒãƒ¼ãƒ‰ã¯ã¨ã‚Šã‚ãˆãšè¦ªã‚’nilã«è¨­å®š
+                     ;; ’N‚©‚Ìq‹Ÿ‚Å‚ ‚é‚±‚Æ‚ªŠm’è‚µ‚½ƒm[ƒh‚Í‚Æ‚è‚ ‚¦‚¸e‚ğnil‚Éİ’è
                      (setf (elt parent-node-array (1- child)) (cons nil 0))
                      ;todo
                      ;(princ "children-nodes-array") (princ children-nodes-array) (princ #\newline) (princ #\newline)
@@ -61,149 +61,90 @@
                                 arr)))
              (solve-core (root)
                (labels ((traverse (current-node parent-node depth)
-                          ;; æ—¢ã«åŒã˜è¦ªãŒç™»éŒ²ã•ã‚Œã¦ã„ãŸã‚‰çµ‚äº†
+                          ;; Šù‚É“¯‚¶e‚ª“o˜^‚³‚ê‚Ä‚¢‚½‚çI—¹
                           (if (eql parent-node (elt parent-node-array (1- current-node)))
                               (return-from solve-core))
-                          ;; ç¾åœ¨ã®æ·±ã•ãŒã€å‰ã«è¦ªãƒãƒ¼ãƒ‰ã‚’ç™»éŒ²ã—ãŸæ™‚ã‚ˆã‚Šã‚‚æ·±ã„å ´åˆã€è¦ªãƒãƒ¼ãƒ‰ã‚’æ›´æ–°ã™ã‚‹
+                          ;; Œ»İ‚Ì[‚³‚ªA‘O‚Éeƒm[ƒh‚ğ“o˜^‚µ‚½‚æ‚è‚à[‚¢ê‡Aeƒm[ƒh‚ğXV‚·‚é
                           (let ((current-parent (elt parent-node-array (1- current-node))))
                             (if (> depth (cdr current-parent))
                                 (setf (elt parent-node-array (1- current-node)) (cons parent-node depth))))
-                          ;todo ã‚ã¨ã§æ¶ˆã™
+                          ;todo ‚ ‚Æ‚ÅÁ‚·
                           ;(princ "  parent-node-array (af)") (princ parent-node-array) (princ #\newline)
-                          ;;; å­ä¾›ã«å¯¾ã—ã¦å†å¸°å‘¼ã³å‡ºã—
-                          (let* ((ch (elt children-nodes-array (1- current-node)))
-                                 (par (make-list (length ch) :initial-element current-node))
-                                 (dep (make-list (length ch) :initial-element (1+ depth))))
-                            ;todo ã‚ã¨ã§æ¶ˆã™
-                            ;(princ "  next children :") (princ ch) (princ #\newline) (princ #\newline)
-                            (mapc #'traverse ch par dep))
+                          ;;; q‹Ÿ‚É‘Î‚µ‚ÄÄ‹AŒÄ‚Ño‚µ
+                          ;(princ "  next children :") (princ ch) (princ #\newline) (princ #\newline)
+                          (mapc #'traverse
+                                (elt children-nodes-array (1- current-node))
+                                (make-list (length (elt children-nodes-array (1- current-node))) :initial-element current-node)
+                                (make-list (length (elt children-nodes-array (1- current-node))) :initial-element (1+ depth)))
                           ))
-                 (let* ((ch (elt children-nodes-array (1- root)))
-                        (par (make-list (length ch) :initial-element root))
-                        (dep (make-list (length ch) :initial-element 1)))
-                   (mapc #'traverse ch par dep)))))
+                 (mapc #'traverse
+                       (elt children-nodes-array (1- root))
+                       (make-list (length (elt children-nodes-array (1- root))) :initial-element root)
+                       (make-list (length (elt children-nodes-array (1- root))) :initial-element 1)))))
+      (princ "    reading inputs ... ")
       (read-inputs)
+      (princ "    done.")
+      (princ #\newline)
+      (princ "    solving ... ")
       (solve-core (find-root parent-node-array))
+      (princ "    done.")
+      (princ #\newline)
+      (princ "    making list")
+      (princ #\newline)
       (mapcar #'car (coerce parent-node-array 'list))
       )))
 ;}}}
 
 
-;;; -*- ãƒ†ã‚¹ãƒˆ -*-{{{
+;;; -*- ƒeƒXƒg -*-{{{
 
-;;; ãƒ†ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿{{{
+;;; ƒeƒXƒgƒf[ƒ^{{{
 (defparameter *test-data-dir*
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
             "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/input/")))
 (defparameter *test-data-list*
-  '("a01"
-    "a02"
-    "b03"
-    "b04"
-    "b05"
-;    "b06"
-;    "b07"
-;    "b08"
-;    "b09"
-;    "b10"
-;    "b11"
-;    "b12"
-;    "b13"
-;    "b14"
-;    "b15"
-;    "b16"
-;    "b17"
-;    "b18"
-;    "b19"
-;    "b20"
-;    "b21"
-;    "b22"
-;    "b23"
-;    "b24"
-;    "b25"
-;    "b26"
-;    "b27"
-;    "b28"
-;    "b29"
-;    "b30"
-;    "b31"
-;    "b32"
-;    "b33"
-;    "b34"
+  '("a01" "a02" "b03" "b04" "b05" "b06" ;"b07" "b08" "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
     ))
 ;}}}
 
-;;; æœŸå¾…å€¤ãƒ‡ãƒ¼ã‚¿{{{
+;;; Šú‘Ò’lƒf[ƒ^{{{
 (defparameter *expected-data-dir*
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
             "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/output/")))
 (defparameter *expected-data-list*
-  '("a01"
-    "a02"
-    "b03"
-    "b04"
-    "b05"
-;    "b06"
-;    "b07"
-;    "b08"
-;    "b09"
-;    "b10"
-;    "b11"
-;    "b12"
-;    "b13"
-;    "b14"
-;    "b15"
-;    "b16"
-;    "b17"
-;    "b18"
-;    "b19"
-;    "b20"
-;    "b21"
-;    "b22"
-;    "b23"
-;    "b24"
-;    "b25"
-;    "b26"
-;    "b27"
-;    "b28"
-;    "b29"
-;    "b30"
-;    "b31"
-;    "b32"
-;    "b33"
-;    "b34"
+  '("a01" "a02" "b03" "b04" "b05" "b06" ;"b07" "b08" "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
     ))
 ;}}}
 
-(defun make-result-list (stream)
-  "çµæœã‚’èª­ã¿è¾¼ã‚“ã§ãƒªã‚¹ãƒˆã‚’ä½œã‚‹
-   stream å…¥åŠ›"
-  (let ((parent-reversed nil))
-    (loop
-      for s = (read-line stream nil)
-      while s
-      do (setf parent-reversed (cons s parent-reversed)))
-    (reverse parent-reversed)))
-
-
 (defun test-solve (test-data-path expected-data-path)
-  "ãƒ†ã‚¹ãƒˆ
-   test-data-path ãƒ†ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã®ãƒ‘ã‚¹
-   expected-data-path æœŸå¾…å€¤ãƒ‡ãƒ¼ã‚¿ã®ãƒ‘ã‚¹"
+  "ƒeƒXƒg
+   test-data-path ƒeƒXƒgƒf[ƒ^‚ÌƒpƒX
+  expected-data-path Šú‘Ò’lƒf[ƒ^‚ÌƒpƒX"
   (with-open-file (in-test test-data-path)
+    (princ "  using ") (princ test-data-path) (princ #\newline)
     (with-open-file (in-expected expected-data-path)
-      (let ((actual (solve in-test))
-            (expected (make-result-list in-expected)))
-        (princ "  actual   ") (princ actual) (princ #\newline)
-        (princ "  expected ") (princ expected) (princ #\newline)
-        (princ "equal actual expected: ") (princ (equal actual expected)) (princ #\newline) (princ #\newline)
-        (equal actual expected)))))
+      (princ "  using ") (princ expected-data-path) (princ #\newline)
+      (labels ((make-result-list (stream)
+                 (let ((parent-reversed nil))
+                   (loop
+                     for s = (read-line stream nil)
+                     while s
+                     do (setf parent-reversed (cons (parse-integer s) parent-reversed)))
+                   (reverse parent-reversed))))
+        (let ((actual (solve in-test))
+              (expected (make-result-list in-expected)))
+          ;        (princ "  actual   ") (prin1 actual) (princ #\newline)
+          ;        (princ "  expected ") (prin1 expected) (princ #\newline)
+          (princ "equal actual expected: ") (princ (equal actual expected)) (princ #\newline)
+          (equal actual expected)))
+      (princ "  close file done") (princ #\newline))
+    (princ "  close file done") (princ #\newline) (princ #\newline)))
 
-;;; å…¨ãƒ†ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã«å¯¾ã—ã¦ãƒ†ã‚¹ãƒˆå®Ÿæ–½
+;;; ‘SƒeƒXƒgƒf[ƒ^‚É‘Î‚µ‚ÄƒeƒXƒgÀ{
 (if (every (lambda (data)
              (let ((test-data (first data))
                    (expected-data (second data)))
