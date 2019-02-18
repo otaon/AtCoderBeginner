@@ -128,8 +128,6 @@
                             ; parent 親 parent
                             ; ret 親と子供のペア一覧 ((parent . child1) (parent . child1) (parent . child1) ...)
                             (labels ((func (chren &optional (acc nil))
-                                       ;;(princ "        chren ") (princ chren) (princ #\newline)
-                                       ;;(princ "        acc   ") (princ acc) (princ #\newline)
                                        (let ((ch (car chren)))
                                          (if ch
                                              (func (cdr chren) (cons (cons parent ch) acc))
@@ -138,8 +136,6 @@
                           (set-all (current-prev-pair)
                             (let ((prev (car current-prev-pair))
                                   (current (cdr current-prev-pair)))
-                              ;;(princ "      [set-all]prev     ") (princ prev) (princ #\newline)
-                              ;;(princ "      [set-all]current  ") (princ current) (princ #\newline)
                               (if (equal prev (elt parent-node-array (1- current)))
                                   ;; 既に探索したルートであるため登録しない
                                   nil
@@ -149,27 +145,18 @@
                                     ;; 次の探索対象となる子供リストを更新
                                     (setf current-children-list
                                           (append (make-parent-children-pair-list (elt children-nodes-array (1- current)) current) current-children-list))
-                                    ;;(princ "        current-children-list  ") (princ current-children-list) (princ #\newline)
                                     ))))
                           ;; 探索する
                           (traverse ()
-                            ;;(princ "      parent-node-array (before)     ") (princ parent-node-array) (princ #\newline)
-                            ;;(princ "      current-prev-pair-list(before) ") (princ current-prev-pair-list) (princ #\newline)
                             ;; 現在の子供リストを初期化
                             (setf current-children-list nil)
-                            ;; todo 全ての現在ノードに対して、その親を登録する
                             (mapc #'set-all current-prev-pair-list)
-                            ;;(princ "      parent-node-array (after)      ") (princ parent-node-array) (princ #\newline)
-                            ;;(princ "      current-prev-pair-list(after)  ") (princ current-prev-pair-list) (princ #\newline)
-                            ;;(princ #\newline)
                             (setf current-prev-pair-list current-children-list)
 
                             (if current-children-list
                                 (traverse))))
                    ;; ルートの子供をセット
                    (setf current-prev-pair-list (make-parent-children-pair-list (elt children-nodes-array (1- root)) root))
-                   ;;(princ "      [first] current-prev-pair-list: ")
-                   ;;(princ current-prev-pair-list) (princ #\newline) (princ #\newline)
                    (traverse)))))
       (princ "    reading inputs ... ")
       (read-inputs)
