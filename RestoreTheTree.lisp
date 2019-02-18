@@ -36,7 +36,7 @@
 
 
 ;;; -*- 本体 -*-{{{
-(defun solve (stream)
+(defun solve-required-mass-stack-ver (stream);{{{
   "問題を解く
    stream 入力"
   (let* ((node-number (read stream))  ; ノード数
@@ -95,6 +95,97 @@
       )))
 ;}}}
 
+(defun solve (stream)
+  "問題を解く
+   stream 入力"
+  (let* ((node-number (read stream))  ; ノード数
+         (fake-link-number (read stream))  ; 追加されたリンク数
+         (children-nodes-array (make-array node-number :initial-element nil))  ; [ノードid] => '(子ノードid1 子ノードid2 ...)
+         (parent-node-array (make-array node-number :initial-element 0)))  ; [ノードid] => 親ノードid
+    (labels (
+             ;; "親=>子"のペアを読み込む
+             (read-inputs (&optional (current-line 1))
+               (if (<= current-line (+ (1- node-number) fake-link-number))
+                   (let ((parent (read stream))
+                         (child  (read stream)))
+                     (setf (elt children-nodes-array (1- parent)) (cons child (elt children-nodes-array (1- parent))))
+                     ;; 誰かの子供であることが確定したノードはとりあえず親をnilに設定
+                     (setf (elt parent-node-array (1- child)) nil)
+                     (read-inputs (1+ current-line)))))
+             ;; ルートを探索して返す
+             (find-root ()
+               (1+ (position-if (lambda (x)
+                                  (equal x 0))
+                                parent-node-array)))
+             ;; 問題を解く
+             (solve-core (root)
+               (let ((current-prev-pair-list nil)  ; ((親 . ) ...) 多重度 "現在:子供=1:N"
+                     (current-children-list nil))
+                 (labels (
+                          ;; 現在のノードを元に、その子供のペアのリストを作る
+                          (make-parent-children-pair-list (children parent)
+                            ; children 子供一覧(child1 child2 child3 ...)
+                            ; parent 親 parent
+                            ; ret 親と子供のペア一覧 ((parent . child1) (parent . child1) (parent . child1) ...)
+                            (labels ((func (chren &optional (acc nil))
+                                       ;;(princ "        chren ") (princ chren) (princ #\newline)
+                                       ;;(princ "        acc   ") (princ acc) (princ #\newline)
+                                       (let ((ch (car chren)))
+                                         (if ch
+                                             (func (cdr chren) (cons (cons parent ch) acc))
+                                             acc))))
+                              (func children)))
+                          (set-all (current-prev-pair)
+                            (let ((prev (car current-prev-pair))
+                                  (current (cdr current-prev-pair)))
+                              ;;(princ "      [set-all]prev     ") (princ prev) (princ #\newline)
+                              ;;(princ "      [set-all]current  ") (princ current) (princ #\newline)
+                              (if (equal prev (elt parent-node-array (1- current)))
+                                  ;; 既に探索したルートであるため登録しない
+                                  nil
+                                  (progn
+                                    ;; 親配列を更新
+                                    (setf (elt parent-node-array (1- current)) prev)
+                                    ;; 次の探索対象となる子供リストを更新
+                                    (setf current-children-list
+                                          (append (make-parent-children-pair-list (elt children-nodes-array (1- current)) current) current-children-list))
+                                    ;;(princ "        current-children-list  ") (princ current-children-list) (princ #\newline)
+                                    ))))
+                          ;; 探索する
+                          (traverse ()
+                            ;;(princ "      parent-node-array (before)     ") (princ parent-node-array) (princ #\newline)
+                            ;;(princ "      current-prev-pair-list(before) ") (princ current-prev-pair-list) (princ #\newline)
+                            ;; 現在の子供リストを初期化
+                            (setf current-children-list nil)
+                            ;; todo 全ての現在ノードに対して、その親を登録する
+                            (mapc #'set-all current-prev-pair-list)
+                            ;;(princ "      parent-node-array (after)      ") (princ parent-node-array) (princ #\newline)
+                            ;;(princ "      current-prev-pair-list(after)  ") (princ current-prev-pair-list) (princ #\newline)
+                            ;;(princ #\newline)
+                            (setf current-prev-pair-list current-children-list)
+
+                            (if current-children-list
+                                (traverse))))
+                   ;; ルートの子供をセット
+                   (setf current-prev-pair-list (make-parent-children-pair-list (elt children-nodes-array (1- root)) root))
+                   ;;(princ "      [first] current-prev-pair-list: ")
+                   ;;(princ current-prev-pair-list) (princ #\newline) (princ #\newline)
+                   (traverse)))))
+      (princ "    reading inputs ... ")
+      (read-inputs)
+      (princ "    done.")
+      (princ #\newline)
+      (princ "    root is ") (princ (find-root)) (princ #\newline)
+      (princ "    solving ... ")
+      (solve-core (find-root))
+      (princ "    done.")
+      (princ #\newline)
+      (princ "    making list")
+      (princ #\newline)
+      (coerce parent-node-array 'list)
+      )))
+;}}}
+
 
 ;;; -*- テスト -*-{{{
 
@@ -105,7 +196,9 @@
             (sb-posix:getcwd)
             "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/input/")))
 (defparameter *test-data-list*
-  '("a01" "a02" "b03" "b04" "b05" "b06" ;"b07" "b08" "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
+  '(
+    ;"a01" "a02" "b03" "b04" "b05" "b06" "b07" "b08" 
+    "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
     ))
 ;}}}
 
@@ -116,11 +209,13 @@
             (sb-posix:getcwd)
             "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/output/")))
 (defparameter *expected-data-list*
-  '("a01" "a02" "b03" "b04" "b05" "b06" ;"b07" "b08" "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
+  '(
+    ;"a01" "a02" "b03" "b04" "b05" "b06" "b07" "b08" 
+    "b09" "b10" "b11" "b12" "b13" "b14" "b15" "b16" "b17" "b18" "b19" "b20" "b21" "b22" "b23" "b24" "b25" "b26" "b27" "b28" "b29" "b30" "b31" "b32" "b33" "b34"
     ))
 ;}}}
 
-(defun test-solve (test-data-path expected-data-path)
+(defun test-solve (test-data-path expected-data-path);{{{
   "テスト
    test-data-path テストデータのパス
   expected-data-path 期待値データのパス"
@@ -137,12 +232,9 @@
                    (reverse parent-reversed))))
         (let ((actual (solve in-test))
               (expected (make-result-list in-expected)))
-          ;        (princ "  actual   ") (prin1 actual) (princ #\newline)
-          ;        (princ "  expected ") (prin1 expected) (princ #\newline)
           (princ "equal actual expected: ") (princ (equal actual expected)) (princ #\newline)
-          (equal actual expected)))
-      (princ "  close file done") (princ #\newline))
-    (princ "  close file done") (princ #\newline) (princ #\newline)))
+          (equal actual expected))))))
+;}}}
 
 ;;; 全テストデータに対してテスト実施
 (if (every (lambda (data)
