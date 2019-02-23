@@ -53,7 +53,7 @@
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
-            "/testdata/004_AtCoder_abc116_c_GrandGarden/input/")))
+            "/testdata/input/")))
 (defparameter *test-data-list*
   '("sample01.txt"
     "sample02.txt"
@@ -73,7 +73,7 @@
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
-            "/testdata/004_AtCoder_abc116_c_GrandGarden/output/")))
+            "/testdata/output/")))
 (defparameter *expected-data-list*
   '("out_sample01.txt"
     "out_sample02.txt"

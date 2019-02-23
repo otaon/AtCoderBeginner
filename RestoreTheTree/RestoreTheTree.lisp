@@ -181,7 +181,7 @@
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
-            "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/input/")))
+            "/testdata/input/")))
 (defparameter *test-data-list*
   '(
     ;"a01" "a02" "b03" "b04" "b05" "b06" "b07" "b08" 
@@ -194,7 +194,7 @@
   (sb-ext:native-pathname
     (format nil "~A~A"
             (sb-posix:getcwd)
-            "/testdata/005_AtCoder_nikkei2019_qual_d_RestoreTheTree/output/")))
+            "/testdata/output/")))
 (defparameter *expected-data-list*
   '(
     ;"a01" "a02" "b03" "b04" "b05" "b06" "b07" "b08" 
