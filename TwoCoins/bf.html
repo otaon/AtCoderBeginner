@@ -1,0 +1,201 @@
+<!--
+僕がデバッグしないことで
+　　 ＿＿＿＿＿
+　 /|┌───┐|
+　｜|│　　　│|
+　｜|└───┘|
+　｜|　┌─┐　|
+　 ￣￣￣￣￣￣ ∧∧
+　　　　　　　 (　＿)
+　　 ／￣￣旦￣(_　 )
+　 ／　　　　　　＼＿)
+　|￣￣￣￣￣￣￣￣|
+　 ￣凵￣￣￣￣凵￣
+
+僕の代わりに
+だれか一人､職を持てる
+
+　 | ))　　 )) | |＼
+　 |＿＿＿＿(__| |　|
+　／― ∧ ∧ ―＼ ＼|
+／　　(　　 )　　＼≒
+|￣￣￣￣￣￣￣￣￣|
+|＿＿＿＿＿＿＿＿＿|
+
+　　∧∧
+　 ( ･ω･)
+　_| ⊃／(＿＿＿
+／ ヽ_(＿＿＿_／
+￣￣￣￣￣￣￣
+僕はそういうことに
+幸せを感じるんだ
+
+　＜⌒／ヽ-､＿＿
+／＜_/＿＿＿＿／
+￣￣￣￣￣￣￣
+-->
+
+<html>
+<head>
+	<title>brainfuck</title>
+	<script>
+var memory = [];	// メモリ用配列
+var memory_x = 10;	//メモリ表示列数
+var memory_y = 3;	// メモリ表示行数
+var pointer = 0;	// ポインタ
+var program = "";	// brainfuckプログラム
+var pc = 0;			// プログラムカウンタ
+var result = "";	// 実行結果
+
+var initialize = function(){
+	for(var i = 0; i < memory_y; i++){
+		for (var j = 0; j < memory_x; j++){
+			memory[i * memory_x + j] = 0;
+		}
+	}
+};
+
+var setData = function(n){
+	n_array = n.split(" ");
+	for(var i = 0; i < memory_y; i++){
+		for(var j = 0; j < memory_x; j++){
+			if(i * memory_x + j < n_array.length){
+				if(parseInt(n_array[i * memory_x + j]) != NaN){
+					memory[i * memory_x + j] = parseInt(n_array[i * memory_x + j]);
+				}
+			}
+		}
+	}
+};
+
+var makeNum = function(n){
+	n -= 0;
+	if(n > 1000){
+		return n + "";
+	}else{
+		substr = Math.floor(n / 100) + "";
+		substr = substr + (Math.floor((n / 10) % 10) + "").replace("-", "");
+		substr = substr + (Math.floor(n % 10) + "").replace("-", "");
+		return substr;
+	}
+};
+
+var show = function(){
+	var s = "";
+
+	for(var i = 0; i < memory_y; i++){
+		for(var j = 0; j < memory_x; j++){
+			var index = i * memory_x + j;
+			if(pointer == index){
+				s += "<span style='background-color:red'>" + makeNum(memory[index]) + "</span>&nbsp;";
+			}else{
+				s += "<span>" + makeNum(memory[index]) + "</span>&nbsp;";
+			}
+		}
+		s += "<br />";
+	}
+	document.getElementById("memory").innerHTML = s;
+	s = "";
+	for(var i = 0; i < program.length; i++){
+		if(i == pc){
+			s += "<span style='background-color:lightgreen'>" + program.substring(i, i + 1) + "</span>";
+		}else{
+			s += program.substring(i, i + 1);
+		}
+	}
+	document.getElementById("program").innerHTML = s;
+	document.getElementById("result").innerHTML = "result:<br />" + result;
+};
+
+var interpret = function(){
+	if(pc >= program.length){
+		return;
+	}
+	var c = program.substring(pc, pc +1);
+	pc++;
+	switch(c){
+		case '>': pointer++; break;	// ポインタのインクリメント
+		case '<': pointer--; break;	// ポインタのデクリメント
+		case '+': memory[pointer]++; break;	// メモリの値のインクリメント
+		case '-': memory[pointer]--; break;	// メモリの値のデクリメント
+		case '.': result += String.fromCharCode(memory[pointer]); break;
+		case '[':
+				  if(memory[pointer] == 0){
+					  var staple = 0;
+					  for(var i = pc; i < program.length; i++){
+						  if(program.substring(i, i + 1) == '['){
+							  staple++;
+						  }
+						  if(program.substring(i, i + 1) == ']'){
+							  if(staple == 0){
+								  pc = i + 1;
+								  break;
+							  }else{
+								  staple--;
+							  }
+						  }
+					  }
+				  }
+				  break;
+		case ']':
+				  if(memory[pointer] != 0){
+					  var staple = 0;
+					  for(var i = pc - 2; i >= 0; i--){
+						  if(program.substring(i, i + 1) == ']'){
+							  staple++;
+						  }
+						  if(program.substring(i, i + 1) == '['){
+							  if(staple == 0){
+								  pc = i + 1;
+								  break;
+							  }else{
+								  staple--;
+							  }
+						  }
+					  }
+				  }
+				  break;
+	}
+	show();
+	setTimeout(interpret, 10);
+};
+
+onload = function(){
+	initialize();
+	show();
+	document.getElementById("go").onclick = function(){
+		initialize();
+		input = document.getElementById("input").value;
+		setData(input);
+		pointer = 0;
+		program = document.getElementById("source").value;
+		pc = 0;
+		result = "";
+		show();
+		interpret();
+	};
+};
+	</script>
+</head>
+
+<body>
+	<div id="input-text">input: レジスタの初期値設定。スペース区切りで30個まで。<br/></div>
+	<textarea type="text" id="input" cols="80" rows="2">10 5 12</textarea>
+	<br/>
+	<div id="source-text">source: デフォルトは a + b &gt;= c の計算<br/></div>
+	<textarea type="text" id="source" cols="80" rows="5">&gt;&gt;&gt;&gt;+&lt;&lt;&lt;&lt;[-&gt;+&lt;]&gt;[-&gt;-[&gt;]&lt;&lt;]&gt;&gt;&gt;&gt;&gt;+&lt;[&gt;&gt;+++++++++[&gt;++++++++++&lt;-]&gt;-.&lt;++[&gt;+++++&lt;-]&gt;++.&lt;+++[&gt;+++++&lt;-]&gt;-.&lt;&lt;&lt;[-]&gt;-&lt;]&gt;[&lt;&gt;&gt;++++++++[&gt;++++++++++&lt;-]&gt;--.&lt;+++[&gt;+++++++++++&lt;-]&gt;.&lt;&lt;&lt;&gt;-]&lt;</textarea>
+	<br/>
+	<input type="button" value="execute" id="go"><br />
+	<hr />
+	<div id="result">result:<br/></div>
+	<hr />
+	<code>
+		<div id="program"></div>
+	</code>
+	<div style=" width: 400px; padding: 0.5em 1em; margin: 2em 0; font-weight: bold; color: #6091d3; background: #FFF; border: solid 3px #6091d3; border-radius: 10px;">
+		register:<br/>
+		<div id="memory"></div>
+	</div>
+</body>
+</html>
+
